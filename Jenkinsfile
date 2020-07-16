@@ -50,7 +50,7 @@ pipeline {
 	 stage('create cluster') {
             steps {
 	          sh 'sudo rm -rf *;git clone https://github.com/rranjith406/eks-cluster.git'
-	          sh 'sudo cp -r /var/lib/jenkins/workspace/eks/terraform-script-eks/* /home/ec2-user/new'
+	          sh 'sudo cp -r /var/lib/jenkins/workspace/eks/eks-cluster/* /home/ec2-user/new'
 	          sh 'sudo terraform init /home/ec2-user/new'
 	          sh 'sudo terraform fmt /home/ec2-user/new'
 	          sh 'sudo terraform validate /home/ec2-user/new'
