@@ -5,19 +5,21 @@ pipeline {
         stage('install terraform') {
             steps {
 	            sh 'sudo rm -rf /home/ec2-user/new'
-              sh 'sudo mkdir /home/ec2-user/new'
-              sh 'sudo cd /home/ec2-user/new'
+		    //sh 'sudo rm -rf ~/.kube'
+		    //sh 'sudo mkdir ~/.kube'
+		    sh 'sudo mkdir /home/ec2-user/new'
+		    sh 'sudo cd /home/ec2-user/new'
 	            sh 'sudo rm -rf /var/lib/jenkins/workspace/eks/terraform'
 	            sh 'sudo rm -rf /var/lib/jenkins/workspace/eks/terraform_0.12.23_linux_amd64.zip'
-              sh 'sudo wget https://releases.hashicorp.com/terraform/0.12.23/terraform_0.12.23_linux_amd64.zip'
-              sh 'sudo yum install unzip -y'
+		    sh 'sudo wget https://releases.hashicorp.com/terraform/0.12.23/terraform_0.12.23_linux_amd64.zip'
+                    sh 'sudo yum install unzip -y'
 	            echo 'unzip installed'
-              sh 'sudo unzip terraform_0.12.23_linux_amd64.zip'
+                    sh 'sudo unzip terraform_0.12.23_linux_amd64.zip'
 	            sh 'sudo cp ./terraform /usr/bin/terraform && export PATH=$PATH:/usr/bin'
 	            sh 'terraform --version'
               //sh 'sudo echo $"export PATH=\$PATH:$(pwd)" >> ~/.bash_profile'
               //sh 'source ~/.bash_profile'
-              echo 'terraform done'
+                    echo 'terraform done'
 		    		}
         	}
 	stage('install kubectl') {
@@ -32,8 +34,8 @@ pipeline {
 	            sh  'source ~/.bashrc'
 	            sh  'source ~/.bash_profile'
               sh  'sudo kubectl version --short --client'
-              sh  'sudo rm -rf ~/.kube && sudo mkdir ~/.kube'                                 
-              sh  'sudo touch ~/.kube/config-eks'
+              //sh  'sudo rm -rf ~/.kube && sudo mkdir ~/.kube'                                 
+              //sh  'sudo touch ~/.kube/config-eks'
 	            sh  'export KUBECONFIG=~/.kube/config-eks'
               echo 'kubectl done'
 		    		}
@@ -56,10 +58,11 @@ pipeline {
 	          sh 'sudo terraform validate /home/ec2-user/new'
 	          sh 'sudo terraform plan /home/ec2-user/new'
 	          sh 'sudo terraform apply --auto-approve /home/ec2-user/new'
-		  sh 'sudo cd /home/ec2-user/new && sudo terraform output kubeconfig > ~/.kube/config-eks'
+		  sh 'sudo terraform output kubeconfig > /home/ec2-user/config-eks'
+		  sh 'sudo cp /home/ec2-user/config-eks ~/.kube/config-eks'
 		  sh 'export KUBECONFIG=~/.kube/config-eks'
 	          sh 'sudo terraform output config_map_aws_auth > /home/ec2-user/auth.yml'
-	          sh 'kubectl apply -f auth.yml'
+	          sh 'kubectl apply -f /home/ec2-user/auth.yml'
 	    }
 	 }
     }
