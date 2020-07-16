@@ -62,7 +62,7 @@ pipeline {
 		  sh 'sudo cp /home/ec2-user/config-eks ~/.kube/config-eks'
 		  sh 'export KUBECONFIG=~/.kube/config-eks'
 	          sh 'sudo terraform output config_map_aws_auth > /home/ec2-user/auth.yml'
-	          sh 'kubectl apply -f /home/ec2-user/auth.yml'
+	          sh 'sudo kubectl apply -f /home/ec2-user/auth.yml'
 	    }
 	 }
     }
