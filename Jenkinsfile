@@ -56,7 +56,7 @@ pipeline {
 	          sh 'sudo terraform validate /home/ec2-user/new'
 	          sh 'sudo terraform plan /home/ec2-user/new'
 	          sh 'sudo terraform apply --auto-approve /home/ec2-user/new'
-		  sh 'sudo terraform output kubeconfig > ~/.kube/config-eks'
+		  sh 'sudo cd /home/ec2-user/new && sudo terraform output kubeconfig > ~/.kube/config-eks'
 		  sh 'export KUBECONFIG=~/.kube/config-eks'
 	          sh 'sudo terraform output config_map_aws_auth > /home/ec2-user/auth.yml'
 	          sh 'kubectl apply -f auth.yml'
